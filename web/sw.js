@@ -5,7 +5,7 @@
      받은 응답을 캐시에 저장해 둔다.
    - 오프라인이면 캐시로 폴백(페이지 이동은 index.html로).
    이전의 cache-first 방식은 app.js/styles.css가 갱신되지 않는 문제가 있어 교체함. */
-const CACHE = "depeval-v6";
+const CACHE = "depeval-v7";
 
 const ASSETS = [
   "./",
@@ -13,9 +13,9 @@ const ASSETS = [
   "./styles.css",
   "./app.js",
   "./manifest.webmanifest",
-  "./icons/icon-192.png",
-  "./icons/icon-512.png",
-  "./icons/icon-maskable-512.png",
+  "./icons/dep-192.png",
+  "./icons/dep-512.png",
+  "./icons/dep-maskable-512.png",
 ];
 
 self.addEventListener("install", (event) => {
