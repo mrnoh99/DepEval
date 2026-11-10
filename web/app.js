@@ -7,7 +7,7 @@ const DAILY_QUESTIONS = [
   "기분이 가라앉거나, 우울하거나, 희망이 없다고 느꼈다.",
   "평소 하던 일에 대한 흥미나 즐거움이 거의 없었다.",
 ];
-const DAILY_OPTIONS = ["전혀 없음", "며칠 동안", "일주일 이상", "거의 매일"];
+const DAILY_OPTIONS = ["전혀 없음", "약간", "상당히", "매우 심함"];
 
 /* ---- PHQ-9 (주 1회) ---- */
 const PHQ9_QUESTIONS = [

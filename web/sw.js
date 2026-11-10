@@ -5,7 +5,7 @@
      받은 응답을 캐시에 저장해 둔다.
    - 오프라인이면 캐시로 폴백(페이지 이동은 index.html로).
    이전의 cache-first 방식은 app.js/styles.css가 갱신되지 않는 문제가 있어 교체함. */
-const CACHE = "depeval-v1";
+const CACHE = "depeval-v2";
 
 const ASSETS = [
   "./",
