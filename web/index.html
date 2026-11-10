@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>우울 평가</title>
+  <link rel="stylesheet" href="styles.css" />
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="theme-color" content="#3a6df0" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="우울 평가" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+</head>
+<body>
+  <header class="app-header">
+    <h1>우울 평가</h1>
+    <p class="subtitle">매일 기분 체크 · 주간 PHQ-9 · 결과 분석</p>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button class="tab active" data-tab="daily" role="tab">매일 기분 체크</button>
+    <button class="tab" data-tab="weekly" role="tab">주간 PHQ-9</button>
+    <button class="tab" data-tab="analysis" role="tab">결과 분석</button>
+  </nav>
+
+  <main>
+    <!-- ================= 매일 기분 모니터링 ================= -->
+    <section id="daily" class="panel active" role="tabpanel">
+      <div class="card">
+        <h2>매일 기분 모니터링 체크리스트</h2>
+        <div class="field">
+          <label for="daily-date">날짜</label>
+          <input type="date" id="daily-date" />
+        </div>
+        <p class="hint">오늘 하루 나에게 해당했던 수준을 체크해 보세요.</p>
+        <ol class="q-list" id="daily-questions"></ol>
+
+        <div class="total-line">PHQ-2 오늘의 점수 <strong id="phq2-total">0</strong> / 6</div>
+
+        <div class="sub-head">오늘 나의 전반적인 기분 점수</div>
+        <div class="mood-head">
+          <span class="hint">직관적인 점수 (1점: 최악 ~ 10점: 최상)</span>
+          <span class="mood-score"><span id="mood-value">5</span>점</span>
+        </div>
+        <div class="slider-row">
+          <span class="edge">1 최악</span>
+          <input type="range" min="1" max="10" step="1" value="5" id="mood-range" aria-label="기분 점수" />
+          <span class="edge">10 최상</span>
+        </div>
+
+        <div class="sub-head">오늘의 수면 시간 및 질</div>
+        <div class="sleep-row">
+          <input type="number" id="sleep-hours" min="0" max="24" step="0.5" inputmode="decimal" placeholder="7" aria-label="수면 시간" />
+          <span class="unit">시간</span>
+          <span class="seg" role="radiogroup" aria-label="수면의 질">
+            <label><input type="radio" name="sleep-q" value="만족" /><span>만족</span></label>
+            <label><input type="radio" name="sleep-q" value="보통" /><span>보통</span></label>
+            <label><input type="radio" name="sleep-q" value="불만족" /><span>불만족</span></label>
+          </span>
+        </div>
+
+        <div class="sub-head">오늘 기분에 영향을 준 특별한 사건 (한 줄 요약)</div>
+        <input type="text" id="daily-event" maxlength="200"
+          placeholder="예: 업무 마감 압박으로 불안했음 / 산책을 해서 오후에는 기분이 나아짐" />
+
+        <div class="actions">
+          <button type="button" class="btn primary" id="daily-save">기록 저장</button>
+          <button type="button" class="btn" id="daily-reset">초기화</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>매일 기분 기록</h3>
+        <div class="table-wrap">
+          <table id="daily-table">
+            <thead>
+              <tr>
+                <th>날짜</th><th>1</th><th>2</th><th>PHQ-2 /6</th><th>기분 /10</th><th>수면</th><th>수면 질</th><th>특별한 사건</th><th></th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p class="empty-msg" id="daily-empty">아직 저장된 기록이 없습니다.</p>
+      </div>
+    </section>
+
+    <!-- ================= 주간 PHQ-9 ================= -->
+    <section id="weekly" class="panel" role="tabpanel">
+      <div class="card">
+        <h2>PHQ-9 (주 1회)</h2>
+        <p class="hint">지난 2주일 동안 당신은 다음의 문제들로 인해서 얼마나 자주 방해를 받았습니까? (표준 PHQ-9 문항 · 1주일에 한 번 기록)</p>
+        <div class="field">
+          <label for="weekly-date">날짜</label>
+          <input type="date" id="weekly-date" />
+        </div>
+        <ol class="q-list" id="weekly-questions"></ol>
+
+        <div class="total-line">총점 <strong id="phq9-total">0</strong> / 27</div>
+        <div class="severity" id="phq9-severity"></div>
+        <div class="alert" id="phq9-alert" hidden>
+          <strong>9번 문항에 1점 이상으로 응답하셨습니다.</strong> 죽고 싶다는 생각이나 자해 생각이 들면 혼자 견디지 말고
+          담당 의료진에게 알리거나, <strong>자살예방상담전화 109</strong>(24시간) 또는 응급 시 <strong>119</strong>에 연락하세요.
+        </div>
+        <div class="actions">
+          <button type="button" class="btn primary" id="weekly-save">기록 저장</button>
+          <button type="button" class="btn" id="weekly-reset">초기화</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>PHQ-9 기록</h3>
+        <div class="table-wrap">
+          <table id="weekly-table">
+            <thead>
+              <tr>
+                <th>날짜</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>총점 /27</th><th>심각도</th><th></th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p class="empty-msg" id="weekly-empty">아직 저장된 기록이 없습니다.</p>
+      </div>
+    </section>
+
+    <!-- ================= 결과 분석 ================= -->
+    <section id="analysis" class="panel" role="tabpanel">
+      <div class="card">
+        <h2>결과 분석</h2>
+        <p class="hint">날짜에 따른 매일 기록(PHQ-2, 기분 점수)과 주간 PHQ-9 총점의 변화를 표와 그래프로 확인합니다.</p>
+        <h3>그래프</h3>
+        <div class="legend">
+          <span class="legend-item"><label><input type="checkbox" data-series="phq2" checked /><span class="swatch phq2"></span>PHQ-2 (/6, 왼쪽 축)</label></span>
+          <span class="legend-item"><label><input type="checkbox" data-series="mood" checked /><span class="swatch mood"></span>기분 점수 (/10, 왼쪽 축)</label></span>
+          <span class="legend-item"><label><input type="checkbox" data-series="phq9" checked /><span class="swatch phq9"></span>PHQ-9 (/27, 오른쪽 축)</label></span>
+        </div>
+        <div class="chart-toolbar">
+          <span class="chart-hint">한 손가락으로 좌우 이동 · 두 손가락으로 간격 조절</span>
+          <span class="chart-zoom">
+            <button type="button" class="zoom-btn" id="chart-zoom-out" aria-label="간격 좁히기">−</button>
+            <button type="button" class="zoom-btn" id="chart-zoom-in" aria-label="간격 넓히기">＋</button>
+            <button type="button" class="zoom-btn" id="chart-zoom-reset">기본</button>
+          </span>
+        </div>
+        <div id="chart-container"></div>
+        <p class="empty-msg" id="chart-empty">그래프를 그릴 데이터가 없습니다.</p>
+      </div>
+
+      <div class="card">
+        <h3>통합 표</h3>
+        <div class="table-wrap">
+          <table id="analysis-table">
+            <thead>
+              <tr><th>날짜</th><th>PHQ-2 /6</th><th>기분 /10</th><th>수면</th><th>PHQ-9 /27</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p class="empty-msg" id="analysis-empty">분석할 데이터가 없습니다.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <div class="footer-actions">
+      <button class="btn" id="export-data">JSON 백업</button>
+      <button class="btn" id="import-data">JSON 복원</button>
+      <button class="btn" id="export-csv">CSV 저장</button>
+      <button class="btn" id="email-csv">CSV 메일</button>
+      <button class="btn danger" id="clear-all">모든 기록 삭제</button>
+      <input type="file" id="import-file" accept="application/json,.json" hidden />
+    </div>
+    <span class="footer-note">기록은 이 브라우저에만 저장됩니다. 백업은 "JSON 백업", 엑셀/메일용은 "CSV 저장·메일"을 사용하세요.</span>
+    <span class="footer-note">이 앱은 자가 기록 도구이며 진단을 대신하지 않습니다.</span>
+    <button class="btn primary" id="install-app" hidden>앱 설치</button>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
